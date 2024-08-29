@@ -107,7 +107,7 @@ Dimensions Size() {
 #elif defined(_WIN32)
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-  if (GetConsoleScreenBufferInfo(GetConsoleScreenBufferInfoGetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
+  if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
     return Dimensions{csbi.srWindow.Right - csbi.srWindow.Left + 1,
                       csbi.srWindow.Bottom - csbi.srWindow.Top + 1};
   }
