@@ -92,6 +92,12 @@ namespace Terminal {
 /// @return The terminal size.
 /// @ingroup screen
 Dimensions Size() {
+  int tty = STDOUT_FILENO;
+  const char* fds = std::getenv("TTYFD");
+  if (fds) {
+    tty = std::stoi(fds);
+  }
+
 #if defined(__EMSCRIPTEN__)
   // This dimension was chosen arbitrarily to be able to display:
   // https://arthursonzogni.com/FTXUI/examples
@@ -109,7 +115,7 @@ Dimensions Size() {
   return FallbackSize();
 #else
   winsize w{};
-  const int status = ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);  // NOLINT
+  const int status = ioctl(tty, TIOCGWINSZ, &w);  // NOLINT
   // The ioctl return value result should be checked. Some operating systems
   // don't support TIOCGWINSZ.
   if (w.ws_col == 0 || w.ws_row == 0 || status < 0) {
